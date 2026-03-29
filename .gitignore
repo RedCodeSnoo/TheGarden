@@ -1,0 +1,14 @@
+# Dossiers de compilation (à ne jamais push !)
+build/
+bin/
+
+# Fichiers de configuration des éditeurs
+.vscode/
+.idea/
+*.suo
+*.user
+
+# Fichiers objets et exécutables
+*.o
+*.out
+*.exe
