@@ -34,6 +34,7 @@ include_directories(third_party/glbasimac/)
 set(CMAKE_COLOR_MAKEFILE ON)
 
 file(GLOB TD_DIRECTORIES "TD*")
+add_subdirectory(GardenProject)
 
 foreach(TD ${TD_DIRECTORIES})
     add_subdirectory(${TD})
