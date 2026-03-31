@@ -4,6 +4,7 @@
 #include "glbasimac/glbi_set_of_points.hpp"
 #include "glbasimac/glbi_convex_2D_shape.hpp"
 #include "tools/basic_mesh.hpp"
+#include "HeightMap.hpp"
 
 using namespace glbasimac;
 
@@ -18,15 +19,20 @@ extern float cameraAngle;
 
 /* OpenGL Engine */
 extern GLBI_Engine myEngine;
+extern GLBI_Set_Of_Points somePoints;
+extern GLBI_Convex_2D_Shape cercle;
+extern StandardMesh* a_frame;
 
 void initScene();
 
 void drawFrame();
 
-void drawBase();
+void drawGround();
 
-void drawArm();
+void drawBird();
 
-void drawPan();
+void drawTree();
+
+void drawStructure();
 
 void drawScene();

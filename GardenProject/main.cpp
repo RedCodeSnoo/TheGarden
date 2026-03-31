@@ -4,6 +4,7 @@
 #include "glbasimac/glbi_engine.hpp"
 #include "glbasimac/glbi_texture.hpp"
 #include "draw_scene.hpp"
+#include "HeightMap.hpp"
 #include "tools/shaders.hpp"
 #define STB_IMAGE_IMPLEMENTATION
 #include "tools/stb_image.h"
@@ -25,6 +26,9 @@ static const double FRAMERATE_IN_SECONDS = 1. / 30.;
 /* 3D Engine global variables */
 StandardMesh* rectangle;
 StandardMesh* a_frame;
+
+GLBI_Convex_2D_Shape cercle;
+
 
 /* Error handling function */
 void onError(int error, const char* description) {
@@ -57,39 +61,70 @@ void onKey(GLFWwindow* window, int key, int /*scancode*/, int action, int /*mods
         }
     }
     if (action == GLFW_PRESS || action == GLFW_REPEAT) {
-        float cameraSpeed = 0.5f;
-        float turnSpeed = 2.0f;
+        float cameraSpeed = 1.0f;
+        float turnSpeed = 1.0f;
 
-        switch(key) {
-            case GLFW_KEY_W :
-                cameraPositionX += cos(deg2rad(cameraAngle)) * cameraSpeed;
-                cameraPositionY += sin(deg2rad(cameraAngle)) * cameraSpeed;
-                break;
-            case GLFW_KEY_S :
-                cameraPositionX -= cos(deg2rad(cameraAngle)) * cameraSpeed;
-                cameraPositionY -= sin(deg2rad(cameraAngle)) * cameraSpeed;
-                break;
-            case GLFW_KEY_A :
-                cameraPositionX -= sin(deg2rad(cameraAngle)) * cameraSpeed;
-                cameraPositionY += cos(deg2rad(cameraAngle)) * cameraSpeed;
-                break;
-            case GLFW_KEY_D :
-                cameraPositionX += sin(deg2rad(cameraAngle)) * cameraSpeed;
-                cameraPositionY -= cos(deg2rad(cameraAngle)) * cameraSpeed;
-                break;
-            case GLFW_KEY_UP :
-                cameraPositionZ += cameraSpeed;
-                break;
-            case GLFW_KEY_DOWN :
-                cameraPositionZ -= cameraSpeed;
-                break;
-            case GLFW_KEY_LEFT :
-                cameraAngle += turnSpeed;
-                break;
-            case GLFW_KEY_RIGHT :
-                cameraAngle -= turnSpeed;
-                break;
-        }
+		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+			cameraPositionX += cos(deg2rad(cameraAngle)) * cameraSpeed;
+			cameraPositionY += sin(deg2rad(cameraAngle)) * cameraSpeed;
+		}
+		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+			cameraPositionX -= cos(deg2rad(cameraAngle)) * cameraSpeed;
+			cameraPositionY -= sin(deg2rad(cameraAngle)) * cameraSpeed;
+		}
+
+		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+			cameraPositionX -= sin(deg2rad(cameraAngle)) * cameraSpeed;
+			cameraPositionY += cos(deg2rad(cameraAngle)) * cameraSpeed;
+		}
+		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+			cameraPositionX += sin(deg2rad(cameraAngle)) * cameraSpeed;
+			cameraPositionY -= cos(deg2rad(cameraAngle)) * cameraSpeed;
+		}
+
+		if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
+			cameraPositionZ += cameraSpeed;
+		}
+		if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
+			cameraPositionZ -= cameraSpeed;
+		}
+
+		if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
+			cameraAngle += turnSpeed;
+		}
+		if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
+			cameraAngle -= turnSpeed;
+		}
+        // switch(key) {
+        //     case GLFW_KEY_W :
+        //         cameraPositionX += cos(deg2rad(cameraAngle)) * cameraSpeed;
+        //         cameraPositionY += sin(deg2rad(cameraAngle)) * cameraSpeed;
+        //         break;
+        //     case GLFW_KEY_S :
+        //         cameraPositionX -= cos(deg2rad(cameraAngle)) * cameraSpeed;
+        //         cameraPositionY -= sin(deg2rad(cameraAngle)) * cameraSpeed;
+        //         break;
+        //     case GLFW_KEY_A :
+        //         cameraPositionX -= sin(deg2rad(cameraAngle)) * cameraSpeed;
+        //         cameraPositionY += cos(deg2rad(cameraAngle)) * cameraSpeed;
+        //         break;
+        //     case GLFW_KEY_D :
+        //         cameraPositionX += sin(deg2rad(cameraAngle)) * cameraSpeed;
+        //         cameraPositionY -= cos(deg2rad(cameraAngle)) * cameraSpeed;
+        //         break;
+        //     case GLFW_KEY_UP :
+        //         cameraPositionZ += cameraSpeed;
+        //         break;
+        //     case GLFW_KEY_DOWN :
+        //         cameraPositionZ -= cameraSpeed;
+        //         break;
+        //     case GLFW_KEY_LEFT :
+        //         cameraAngle += turnSpeed;
+        //         break;
+        //     case GLFW_KEY_RIGHT :
+        //         cameraAngle -= turnSpeed;
+        //         break;
+        // }
     }
 }
 
@@ -102,20 +137,18 @@ void onMouseButton(GLFWwindow* window, int button, int action, int /*mods*/)
 
 	}
 }
+
 void initBasicScene() {
-	rectangle = basicRect(10.0,10.0);
-	rectangle->createVAO();
 	a_frame = createRepere(10.0);
 	a_frame->createVAO();
 
-	glActiveTexture(GL_TEXTURE0);
+	initScene();
+
+	
 
 }
 
 void renderBasicScene() {
-	a_frame->draw();
-	myEngine.setFlatColor(1.0,0.0,0.0);
-	rectangle->draw();
 }
 
 int main(int /*argc*/, char** /*argv*/)
@@ -184,6 +217,9 @@ int main(int /*argc*/, char** /*argv*/)
 		myEngine.updateMvMatrix();
 
 		renderBasicScene();
+		drawScene();
+
+		
 
 		/* Swap front and back buffers */
 		glfwSwapBuffers(window);
