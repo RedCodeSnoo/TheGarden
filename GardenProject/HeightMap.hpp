@@ -14,12 +14,14 @@ public:
     int getWidth() const { return m_width; }
     int getHeight() const { return m_height; }
     float getPixel(int i, int j) const;
+    float getMinPixel() const { return m_minPixel; }
 
 private:
     int m_width;
     int m_height;
     std::vector<unsigned char> m_data;
     bool m_isLoaded;
+    float m_minPixel;
 
     void skipComments(std::ifstream& file);
 

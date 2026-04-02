@@ -41,8 +41,23 @@ bool HeightMap::load(const std::string& filename) {
 
     if (m_width > 0 && m_height > 0) {
         m_data.resize(m_width * m_height);
-        file.read(reinterpret_cast<char*>(m_data.data()), m_data.size());
+        file.read((char*)(m_data.data()), m_data.size());
         m_isLoaded = true;
+        
+        m_minPixel = 0.0f;
+        bool first_found = false;
+        
+        for (auto val : m_data) {
+            if (val > 0) {
+                if (!first_found) {
+                    m_minPixel = val;
+                    first_found = true;
+                } else if (val < m_minPixel) {
+                    m_minPixel = val;
+                }
+            }
+        }
+
         return true;
     }
 
