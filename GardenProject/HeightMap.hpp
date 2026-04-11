@@ -16,6 +16,8 @@ public:
     float getPixel(int i, int j) const;
     float getMinPixel() const { return m_minPixel; }
 
+    bool isTreeLocation(int i, int j) const;
+
 private:
     int m_width;
     int m_height;

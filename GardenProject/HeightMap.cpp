@@ -103,3 +103,11 @@ float HeightMap::getPixel(int i, int j) const {
     
     return 0.0f;
 }
+
+
+// Vérifie si un pixel spécifique correspond à l'emplacement d'un arbre (valeur 0)
+bool HeightMap::isTreeLocation(int i, int j) const {
+    if (!m_isLoaded) return false;
+    auto idx = j * m_width + i;
+    return m_data[idx] == 0;
+}
