@@ -3,27 +3,24 @@
 #include "glbasimac/glbi_engine.hpp"
 #include "tools/basic_mesh.hpp"
 #include "tools/vector3d.hpp"
-#include "Wing.hpp"
 
 using namespace glbasimac;
 using namespace STP3D;
 
-class Bird {
+class Wing {
 public:
-    Bird();
-    
+    Wing(bool isLeft);
+
     void init();
     void update(double deltaTime);
     void draw(GLBI_Engine& engine);
 
 private:
-    Vector3D m_position;
-    float m_rotationAngle;
+    bool m_isLeft;
+    float m_flapAngle;
+    IndexedMesh* m_wingMesh;
     
-    IndexedMesh* m_bodyMesh;
-    IndexedMesh* m_headMesh;
-    StandardMesh* m_beakMesh;
-
-    Wing m_leftWing;
-    Wing m_rightWing;
+    float m_flapSpeed;
+    float m_maxAngle;
+    int m_flapDirection;
 };

@@ -190,11 +190,17 @@ int main(int /*argc*/, char** /*argv*/)
 
 	initBasicScene();
 
+	double lastTime = glfwGetTime();
+
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))
 	{
 		/* Get time (in second) at loop beginning */
 		double startTime = glfwGetTime();
+		double deltaTime = startTime - lastTime;
+		lastTime = startTime;
+
+		updateScene(deltaTime);
 
 		/* Render begins here */
 		glClearColor(0.f,0.0f,0.2f,0.0f);

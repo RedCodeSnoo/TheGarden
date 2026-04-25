@@ -39,3 +39,5 @@ void drawTree();
 void drawStructure();
 
 void drawScene();
+
+void updateScene(double deltaTime);

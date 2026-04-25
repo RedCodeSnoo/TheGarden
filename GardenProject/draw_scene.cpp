@@ -279,3 +279,7 @@ void drawScene() {
     drawTree();
     drawBird();
 }
+
+void updateScene(double deltaTime) {
+    myBird.update(deltaTime);
+}
