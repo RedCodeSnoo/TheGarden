@@ -26,4 +26,8 @@ private:
 
     Wing m_leftWing;
     Wing m_rightWing;
+
+    int m_state;
+    float m_targetAngle;
+    Vector3D m_startLinePosition;
 };

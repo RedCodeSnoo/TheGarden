@@ -1,6 +1,6 @@
 #include "Bird.hpp"
 
-Bird::Bird() : m_position(0.0f, 0.0f, 30.0f), m_rotationAngle(0.0f), m_leftWing(true), m_rightWing(false) {
+Bird::Bird() : m_position(0.0f, 0.0f, 30.0f), m_rotationAngle(0.0f), m_leftWing(true), m_rightWing(false), m_state(0), m_startLinePosition(0.0f, 0.0f, 30.0f) {
     m_bodyMesh = nullptr;
     m_headMesh = nullptr;
     m_beakMesh = nullptr;
@@ -23,6 +23,34 @@ void Bird::init() {
 void Bird::update(double deltaTime) {
     m_leftWing.update(deltaTime);
     m_rightWing.update(deltaTime);
+
+    auto flySpeed = 25.0f;
+    auto turnSpeed = M_PI; 
+    auto targetDistance = 100.0f; 
+
+    m_position.x += std::cos(m_rotationAngle) * flySpeed * deltaTime;
+    m_position.y += std::sin(m_rotationAngle) * flySpeed * deltaTime;
+
+    if (m_state == 0) { // ligne droite
+        auto dx = m_position.x - m_startLinePosition.x;
+        auto dy = m_position.y - m_startLinePosition.y;
+        auto distanceParcourue = std::sqrt(dx*dx + dy*dy);
+
+        if (distanceParcourue >= targetDistance) {
+            m_state = 1; 
+            m_targetAngle = m_rotationAngle + M_PI;
+        }
+    } 
+    else if (m_state == 1) { // virage
+        m_rotationAngle += turnSpeed * deltaTime;
+
+        if (m_rotationAngle >= m_targetAngle) {
+            m_rotationAngle = m_targetAngle; 
+            m_state = 0; 
+
+            m_startLinePosition = m_position; 
+        }
+    }
 }
 
 void Bird::draw(GLBI_Engine& engine) {
