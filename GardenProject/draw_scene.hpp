@@ -5,6 +5,7 @@
 #include "glbasimac/glbi_convex_2D_shape.hpp"
 #include "tools/basic_mesh.hpp"
 #include "HeightMap.hpp"
+#include "Bird.hpp"
 
 using namespace glbasimac;
 
@@ -22,6 +23,8 @@ extern GLBI_Engine myEngine;
 extern GLBI_Set_Of_Points somePoints;
 extern GLBI_Convex_2D_Shape cercle;
 extern StandardMesh* a_frame;
+
+extern Bird myBird;
 
 void initScene();
 
