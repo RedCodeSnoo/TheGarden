@@ -63,72 +63,6 @@ void onKey(GLFWwindow* window, int key, int /*scancode*/, int action, int /*mods
 				break;
         }
     }
-    if (action == GLFW_PRESS || action == GLFW_REPEAT) {
-        float cameraSpeed = 1.0f;
-        float turnSpeed = 1.0f;
-
-		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-			cameraPositionX += cos(deg2rad(cameraAngle)) * cameraSpeed;
-			cameraPositionY += sin(deg2rad(cameraAngle)) * cameraSpeed;
-		}
-		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-			cameraPositionX -= cos(deg2rad(cameraAngle)) * cameraSpeed;
-			cameraPositionY -= sin(deg2rad(cameraAngle)) * cameraSpeed;
-		}
-
-		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-			cameraPositionX -= sin(deg2rad(cameraAngle)) * cameraSpeed;
-			cameraPositionY += cos(deg2rad(cameraAngle)) * cameraSpeed;
-		}
-		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-			cameraPositionX += sin(deg2rad(cameraAngle)) * cameraSpeed;
-			cameraPositionY -= cos(deg2rad(cameraAngle)) * cameraSpeed;
-		}
-
-		if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
-			cameraPositionZ += cameraSpeed;
-		}
-		if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
-			cameraPositionZ -= cameraSpeed;
-		}
-
-		if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
-			cameraAngle += turnSpeed;
-		}
-		if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
-			cameraAngle -= turnSpeed;
-		}
-        // switch(key) {
-        //     case GLFW_KEY_W :
-        //         cameraPositionX += cos(deg2rad(cameraAngle)) * cameraSpeed;
-        //         cameraPositionY += sin(deg2rad(cameraAngle)) * cameraSpeed;
-        //         break;
-        //     case GLFW_KEY_S :
-        //         cameraPositionX -= cos(deg2rad(cameraAngle)) * cameraSpeed;
-        //         cameraPositionY -= sin(deg2rad(cameraAngle)) * cameraSpeed;
-        //         break;
-        //     case GLFW_KEY_A :
-        //         cameraPositionX -= sin(deg2rad(cameraAngle)) * cameraSpeed;
-        //         cameraPositionY += cos(deg2rad(cameraAngle)) * cameraSpeed;
-        //         break;
-        //     case GLFW_KEY_D :
-        //         cameraPositionX += sin(deg2rad(cameraAngle)) * cameraSpeed;
-        //         cameraPositionY -= cos(deg2rad(cameraAngle)) * cameraSpeed;
-        //         break;
-        //     case GLFW_KEY_UP :
-        //         cameraPositionZ += cameraSpeed;
-        //         break;
-        //     case GLFW_KEY_DOWN :
-        //         cameraPositionZ -= cameraSpeed;
-        //         break;
-        //     case GLFW_KEY_LEFT :
-        //         cameraAngle += turnSpeed;
-        //         break;
-        //     case GLFW_KEY_RIGHT :
-        //         cameraAngle -= turnSpeed;
-        //         break;
-        // }
-    }
 }
 
 void onMouseButton(GLFWwindow* window, int button, int action, int /*mods*/)
@@ -208,6 +142,40 @@ int main(int argc, char** argv)
 		double startTime = glfwGetTime();
 		double deltaTime = startTime - lastTime;
 		lastTime = startTime;
+
+		float cameraSpeed = 1.0f;
+        float turnSpeed = 1.0f;
+
+		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+            cameraPositionX += cos(deg2rad(cameraAngle)) * cameraSpeed;
+            cameraPositionY += sin(deg2rad(cameraAngle)) * cameraSpeed;
+        }
+        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+            cameraPositionX -= cos(deg2rad(cameraAngle)) * cameraSpeed;
+            cameraPositionY -= sin(deg2rad(cameraAngle)) * cameraSpeed;
+        }
+        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+            cameraPositionX -= sin(deg2rad(cameraAngle)) * cameraSpeed;
+            cameraPositionY += cos(deg2rad(cameraAngle)) * cameraSpeed;
+        }
+        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+            cameraPositionX += sin(deg2rad(cameraAngle)) * cameraSpeed;
+            cameraPositionY -= cos(deg2rad(cameraAngle)) * cameraSpeed;
+        }
+        if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
+            cameraAngle += turnSpeed;
+        }
+        if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
+            cameraAngle -= turnSpeed;
+        }
+		if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
+			cameraPositionZ += cameraSpeed;
+		}
+		if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
+			cameraPositionZ -= cameraSpeed;
+		}
+
+
 
 		updateScene(deltaTime);
 
