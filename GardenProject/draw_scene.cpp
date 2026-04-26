@@ -4,7 +4,7 @@
 #include "tools/stb_image.h"
 #include "tools/vector3d.hpp"
 
-float cameraPositionX {50.0f};
+float cameraPositionX {0.0f};
 float cameraPositionY {-100.0f};
 float cameraPositionZ {50.0f};
 float cameraAngle {90.0f};
@@ -17,9 +17,9 @@ HeightMap terrainLoader;
 IndexedMesh* sunMesh = nullptr;
 
 // Coordonnées du soleil
-float sunPosX = 0.0f;
-float sunPosY = 0.0f;
-float sunPosZ = 50.0f;
+float sunPosX = 0.0f; 
+float sunPosY = 50.0f;
+float sunPosZ = 60.0f;
 
 Bird myBird(Vector3D(0.0f, 0.0f, 30.0f), deg2rad(0.0f));
 
@@ -164,6 +164,7 @@ void initScene() {
 
     myEngine.switchToPhongShading();
     myEngine.addALight(Vector4D(0,0,0,1), Vector3D(1,1,1));
+    myEngine.addALight(Vector4D(0,0,0,1), Vector3D(1,1,1));
     myEngine.setAttenuationFactor(Vector3D{1.0, 0.0, 0.0});  
 	myEngine.switchToFlatShading();
 
@@ -189,7 +190,7 @@ void drawGround() {
     Vector3D birdPos = myBird.getPosition(); 
     myEngine.setLightPosition(Vector4D(birdPos.x, birdPos.y, birdPos.z, 1.0f), 1); 
     myEngine.setLightIntensity(Vector3D(1.0f, 1.0f, 1.0f), 1); 
-    myEngine.setFlatColor(1.0f, 1.0f, 1.0f);
+    myEngine.setFlatColor(0.25f, 0.25f, 0.25f);
     myEngine.activateTexturing(true);
 
     groundTexture.attachTexture();
@@ -215,7 +216,7 @@ void drawBird() {
 }
 
 void drawTree() {
-    myEngine.switchToFlatShading(); 
+    myEngine.switchToPhongShading();
     
     for (const auto& pos : treePositions) {
         myEngine.mvMatrixStack.pushMatrix(); 
