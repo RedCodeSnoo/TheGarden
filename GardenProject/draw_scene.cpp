@@ -21,7 +21,10 @@ float sunPosX = 0.0f;
 float sunPosY = 0.0f;
 float sunPosZ = 50.0f;
 
-Bird myBird;
+Bird myBird1(Vector3D(10.0f, 10.0f, 30.0f), deg2rad(90.0f));
+Bird myBird2(Vector3D(-10.0f, 10.0f, 30.0f), deg2rad(-90.0f));
+Bird myBird3(Vector3D(10.0f, -10.0f, 30.0f), deg2rad(0.0f));
+Bird myBird4(Vector3D(-10.0f, -10.0f, 30.0f), deg2rad(180.0f));
 
 // Variables globales pour la génération des arbres (positions sur la carte et modèles 3D)
 std::vector<Vector3D> treePositions;
@@ -178,7 +181,10 @@ void initScene() {
     treeLeavesMesh = STP3D::basicSphere(1.2f, 16, 16);
     treeLeavesMesh->createVAO();
 
-    myBird.init();
+    myBird1.init();
+    myBird2.init();
+    myBird3.init();
+    myBird4.init();
 }
 
 
@@ -209,7 +215,10 @@ void drawSun() {
 }
 
 void drawBird() {
-	myBird.draw(myEngine);
+	myBird1.draw(myEngine);
+    myBird2.draw(myEngine);
+    myBird3.draw(myEngine);
+    myBird4.draw(myEngine);
 }
 
 void drawTree() {
@@ -281,5 +290,8 @@ void drawScene() {
 }
 
 void updateScene(double deltaTime) {
-    myBird.update(deltaTime);
+    myBird1.update(deltaTime);
+    myBird2.update(deltaTime);
+    myBird3.update(deltaTime);
+    myBird4.update(deltaTime);
 }

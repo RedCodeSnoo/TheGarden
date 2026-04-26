@@ -1,9 +1,28 @@
 #include "Bird.hpp"
+#include <cstdlib>
 
-Bird::Bird() : m_position(0.0f, 0.0f, 30.0f), m_rotationAngle(0.0f), m_leftWing(true), m_rightWing(false), m_state(0), m_startLinePosition(0.0f, 0.0f, 30.0f) {
+Bird::Bird(Vector3D startPosition, float startYaw) :
+    m_leftWing(true), 
+    m_rightWing(false),
+    m_position(startPosition),
+    m_startPos(startPosition),
+    m_yaw(startYaw),
+    m_pitch(0.0f),
+    m_state(0),
+    m_targetYaw(0.0f),
+    m_totalTime(0.0f),
+    m_flySpeed(25.0f),
+    m_turnSpeed(1.0f),
+    m_baseAltitude(startPosition.z)
+    
+{
     m_bodyMesh = nullptr;
     m_headMesh = nullptr;
     m_beakMesh = nullptr;
+
+    m_ampZ = 4.0f + (std::rand() % 9);
+    m_freqZ = 1.0f + (std::rand() % 13) * 0.1f;
+    m_straightDist = 50.0f + (std::rand() % 50);
 }
 
 void Bird::init() {
@@ -23,34 +42,50 @@ void Bird::init() {
 void Bird::update(double deltaTime) {
     m_leftWing.update(deltaTime);
     m_rightWing.update(deltaTime);
+    m_totalTime += deltaTime;
 
-    auto flySpeed = 25.0f;
-    auto turnSpeed = M_PI; 
-    auto targetDistance = 100.0f; 
+    // modification de la hauteur
+    m_position.z = m_baseAltitude + std::sin(m_totalTime * m_freqZ) * m_ampZ;
+    m_pitch = std::atan2(m_ampZ * m_freqZ * std::cos(m_totalTime * m_freqZ), m_flySpeed);
 
-    m_position.x += std::cos(m_rotationAngle) * flySpeed * deltaTime;
-    m_position.y += std::sin(m_rotationAngle) * flySpeed * deltaTime;
+    switch (m_state) {
+        case 0: { // ligne droite
+            auto dist = std::hypot(m_position.x - m_startPos.x, m_position.y - m_startPos.y);
+            auto outOfBounds = std::abs(m_position.x) > 90.0f || std::abs(m_position.y) > 90.0f;
+            
+            if (dist >= m_straightDist || outOfBounds) {
+                float turnSign;
+                
+                if (outOfBounds) {
+                    auto centreAGauche = m_position.x * std::sin(m_yaw) - m_position.y * std::cos(m_yaw);
+                    turnSign = (centreAGauche > 0.0f) ? 1.0f : -1.0f; 
+                } else {
+                    turnSign = (std::rand() % 2 == 0) ? 1.0f : -1.0f;
+                }
 
-    if (m_state == 0) { // ligne droite
-        auto dx = m_position.x - m_startLinePosition.x;
-        auto dy = m_position.y - m_startLinePosition.y;
-        auto distanceParcourue = std::sqrt(dx*dx + dy*dy);
-
-        if (distanceParcourue >= targetDistance) {
-            m_state = 1; 
-            m_targetAngle = m_rotationAngle + M_PI;
+                m_targetYaw = m_yaw + (turnSign * M_PI_2);
+                m_state = 1; 
+            }
+            break;
         }
-    } 
-    else if (m_state == 1) { // virage
-        m_rotationAngle += turnSpeed * deltaTime;
 
-        if (m_rotationAngle >= m_targetAngle) {
-            m_rotationAngle = m_targetAngle; 
-            m_state = 0; 
-
-            m_startLinePosition = m_position; 
+        case 1: { // virage
+            auto diff = std::atan2(std::sin(m_targetYaw - m_yaw), std::cos(m_targetYaw - m_yaw));
+            auto step = m_turnSpeed * deltaTime;
+            
+            if (std::abs(diff) <= step) {
+                m_yaw = m_targetYaw;
+                m_startPos = m_position;
+                m_straightDist = 50.0f + (std::rand() % 50);
+                m_state = 0;
+            } else {
+                m_yaw += (diff > 0 ? step : -step);
+            }
+            break;
         }
     }
+    m_position.x += std::cos(m_yaw) * m_flySpeed * deltaTime;
+    m_position.y += std::sin(m_yaw) * m_flySpeed * deltaTime;
 }
 
 void Bird::draw(GLBI_Engine& engine) {
@@ -60,7 +95,8 @@ void Bird::draw(GLBI_Engine& engine) {
     engine.mvMatrixStack.pushMatrix();
     
     engine.mvMatrixStack.addTransformation(Matrix4D::translation(m_position.x, m_position.y, m_position.z));
-    engine.mvMatrixStack.addTransformation(Matrix4D::rotation(m_rotationAngle, 2));
+    engine.mvMatrixStack.addTransformation(Matrix4D::rotation(m_yaw, 2));
+    engine.mvMatrixStack.addTransformation(Matrix4D::rotation(-m_pitch, 1));
 
     // DESSIN DU CORPS
     engine.mvMatrixStack.pushMatrix();
@@ -72,7 +108,7 @@ void Bird::draw(GLBI_Engine& engine) {
 
     // DESSIN DE LA TÊTE
     engine.mvMatrixStack.pushMatrix();
-    engine.mvMatrixStack.addTransformation(Matrix4D::translation(1.8f, 0.0f, 0.2f)); // Légèrement vers le haut et l'avant
+    engine.mvMatrixStack.addTransformation(Matrix4D::translation(1.8f, 0.0f, 0.2f));
     engine.setFlatColor(0.3f, 0.5f, 1.0f);
     engine.updateMvMatrix();
     m_headMesh->draw();
