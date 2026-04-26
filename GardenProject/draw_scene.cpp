@@ -278,6 +278,10 @@ float getTerrainZ(float x, float y) {
 void updateScene(double deltaTime) {
     myBird.update(deltaTime);
     myWindmill.update(deltaTime);
+
+    Vector3D wPos = myWindmill.getPosition();
+    myWindmill.setZ(getTerrainZ(wPos.x, wPos.y));
+
     for(auto& sheep : myHerd) {
         sheep.update(deltaTime);
         Vector3D pos = sheep.getPosition();

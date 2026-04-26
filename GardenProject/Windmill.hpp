@@ -16,6 +16,9 @@ public:
     void update(double deltaTime);
     void draw(GLBI_Engine& engine);
 
+    Vector3D getPosition() const { return m_position; }
+    void setZ(float z) { m_position.z = z; }
+
 private:
     Vector3D m_position;
     float m_rotationAngle;
