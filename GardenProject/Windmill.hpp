@@ -19,7 +19,8 @@ public:
 private:
     Vector3D m_position;
     float m_rotationAngle;
-
+    float m_rotationSpeed;
+    
     IndexedMesh* m_towerMesh;
     StandardMesh* m_roofMesh;
     IndexedMesh* m_bladeMesh;

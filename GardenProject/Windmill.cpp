@@ -4,7 +4,7 @@
 #include <cmath>
 
 Windmill::Windmill(Vector3D startPosition) 
-    : m_position(startPosition), m_rotationAngle(0.0f), 
+    : m_position(startPosition), m_rotationAngle(0.0f), m_rotationSpeed(1.5f),
       m_towerMesh(nullptr), m_roofMesh(nullptr), m_bladeMesh(nullptr) {}
 
 void Windmill::init() {
@@ -69,8 +69,8 @@ void Windmill::init() {
     }
 }
 
-void Windmill::update(double /*deltaTime*/) {
-    // todo
+void Windmill::update(double deltaTime) {
+    m_rotationAngle += m_rotationSpeed * deltaTime;
 }
 
 void Windmill::draw(GLBI_Engine& engine) {
@@ -107,6 +107,8 @@ void Windmill::draw(GLBI_Engine& engine) {
     m_woodTexture.attachTexture();
     engine.mvMatrixStack.pushMatrix();
     engine.mvMatrixStack.addTransformation(Matrix4D::translation(0.0f, -3.5f, 6.5f));
+
+    engine.mvMatrixStack.addTransformation(Matrix4D::rotation(m_rotationAngle, 1));
 
     for(int i = 0; i < 4; i++) {
         engine.mvMatrixStack.pushMatrix();
