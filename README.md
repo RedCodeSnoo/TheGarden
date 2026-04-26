@@ -1,32 +1,68 @@
-# GL TD Template
+# 🌿 The Garden - Projet Synthèse d'images
 
-Welcome !
+![C++](https://img.shields.io/badge/C++-00599C?style=for-the-badge&logo=c%2B%2B&logoColor=white)
+![OpenGL](https://img.shields.io/badge/OpenGL-FFFFFF?style=for-the-badge&logo=opengl&logoColor=5586A4)
+![CMake](https://img.shields.io/badge/CMake-064F8C?style=for-the-badge&logo=cmake&logoColor=white)
 
-This is a small template for pratical sessions (TD) of IMAC E3 with openGL.
+**The Garden** est un environnement virtuel interactif en 3D développé en C++ avec OpenGL. Ce projet simule un écosystème dynamique comprenant un terrain généré procéduralement, une forêt, un moulin animé et une faune adaptative.
 
-## Compiling
+## ✨ Fonctionnalités
 
-You need to install [CMake](https://cmake.org/download/).
+- **Génération de Terrain :** Relief dynamique créé à partir d'une *HeightMap* (`.pgm`) avec lissage automatique et calcul des normales pour un éclairage réaliste.
+- **Forêt Procédurale :** Placement automatique d'arbres sur les zones planes identifiées sur la carte.
+- **Faune Animée & Adaptative :**
+    - **Oiseau :** Vol sinusoïdal fluide avec animation articulée des ailes.
+    - **Moutons :** IA de déplacement aléatoire capable de lire le relief en temps réel pour rester parfaitement au contact du sol.
+- **Système d'Éclairage :** - Support des modes **Flat Shading** et **Blinn-Phong**.
+    - Lumière directionnelle globale (Soleil) et lumière ponctuelle mobile attachée à l'animal volant.
+- **Optimisation VRAM :** Architecture Orientée Objet avec utilisation de pointeurs statiques pour le partage des maillages géométriques, permettant d'afficher une forêt dense sans perte de performance.
 
-To use CMake I recommend this VS Code extension : [ms-vscode.cmake-tools](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cmake-tools). You will need to setup the extension with a compiler. Here is [the tutorial](https://code.visualstudio.com/docs/cpp/cmake-linux). It is based on Linux but at the bottom of the page you will find the explanations to adapt it for [Windows](https://code.visualstudio.com/docs/cpp/config-msvc) and [Mac](https://code.visualstudio.com/docs/cpp/config-clang-mac).
+## 🛠️ Installation et Compilation
 
-For windows you can also use MSYS2 which is available [here](https://www.msys2.org/). This "émulator" allows you to install libraries in the same way than linux, thanks to the command *pacman*. Follow the installation procedure and you will have access to a terminal like in Linux. Then you will be able to install cmake and OpenGL (the emulator is called *Mesa* which does not require a graphic card). You can look at any module/library thanks to the commande `pacman -Ss <library>` (for exameple `pacman -S mesa`). Then you can install it thanks to `pacman -S <nom_du_module>` (`pacman -S mingw64/mingw-w64-x86_64-mesa` for instance). 
+### Prérequis
+- Un compilateur C++ (supportant C++11 ou supérieur)
+- CMake
+- Librairies OpenGL (GLFW, GLEW)
 
-Alternatively, on Linux or in MSYS2, you can just create a *build* folder at the root of this project, open a terminal and run `cmake ..` ; chances are it will detect what compiler you have installed and generate the appropriate Makefile / Visual Studio solution / Xcode project.
+### Compilation
+Exécutez les commandes suivantes à la racine du projet :
 
-Executables will be located in the *bin* folder.
+```bash
+mkdir build
+cd build
+cmake ..
+make
+```
 
-## TD Folders
+### 4.2. Exécution du programme
 
-In each TD** folder, each ex****.cpp file will generate an executable, located in the *bin* folder.
-In each ex***.cpp, we initialize [*glfw*](https://www.glfw.org/docs/latest/) (the library that handles the window and user inputs), create a window and then start the app.
+Une fois la compilation terminée, l'exécutable est généré dans le dossier `bin`. Pour que les chemins relatifs vers les textures et les shaders soient valides, vous devez vous placer dans le répertoire `bin` avant de lancer l'application :
 
-When compiling, you can ask to compile only one TD thanks to the command `make TDXX` (like `make TD02`). It will only compile and link executables from the corresponding foler.
+```bash
+cd bin
+./GardenProject_main ../assets/textures/terrain.pgm
+```
 
-## User inputs
+### 🎮 Commandes Utilisateur
 
-To learn more about the parameters you receive in the callbacks, read [glfw's documentation](https://www.glfw.org/docs/latest/input_guide.html).
+| Touche | Action |
+| :--- | :--- |
+| **Z / S** | Avancer / Reculer (Caméra FPS) |
+| **Q / D** | Déplacement latéral gauche / droit |
+| **Haut / Bas** | Monter / Descendre en altitude (Axe Z) |
+| **Gauche / Droite** | Pivoter la vue (Rotation 360°) |
+| **F** | Alterner entre Flat Shading et Blinn-Phong |
+| **L** | Activer le mode Fil de fer (Wireframe) |
+| **P** | Revenir au mode Plein (Fill) |
+| **ESC** | Quitter l'application |
 
-## Assets
+### 📂 Structure du Projet
 
-Assets (images, 3D models or shaders for example) are supposed to be located in the assets folder.
+* **`/src`** : Classes C++ (Entités, Moteur, Gestion du terrain).
+* **`/assets`** : Textures (herbe, pierre, bois) et Shaders GLSL.
+* **`/bin`** : Répertoire de sortie des exécutables.
+
+### 👥 Auteurs
+
+* Projet réalisé par **Ryad Meghachi** et **Lucas Benesby**.
+* **GitHub** : [https://github.com/RedCodeSnoo/TheGarden](https://github.com/RedCodeSnoo/TheGarden)
