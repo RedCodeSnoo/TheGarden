@@ -33,7 +33,7 @@ extern Windmill myWindmill;
 
 extern bool usePhong;
 
-void initScene();
+void initScene(const std::string& terrainFilename);
 
 void drawFrame();
 

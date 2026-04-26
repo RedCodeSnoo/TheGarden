@@ -31,10 +31,10 @@ std::vector<Sheep> myHerd;
 bool usePhong = true;
 
 
-void initScene() {
+void initScene(const std::string& terrainFilename) {
 
-    if (!terrainLoader.load("../assets/textures/terrain.pgm")) {
-        std::cerr << "ERROR: Cannot load PGM file ../assets/textures/terrain.pgm" << std::endl;
+    if (!terrainLoader.load(terrainFilename)) {
+        std::cerr << "ERROR: Cannot load PGM file "<< terrainFilename << std::endl;
         return;
     }
 

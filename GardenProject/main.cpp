@@ -141,11 +141,11 @@ void onMouseButton(GLFWwindow* window, int button, int action, int /*mods*/)
 	}
 }
 
-void initBasicScene() {
+void initBasicScene(const std::string& terrainFilename) {
 	a_frame = createRepere(10.0);
 	a_frame->createVAO();
 
-	initScene();
+	initScene(terrainFilename);
 
 	
 
@@ -154,8 +154,14 @@ void initBasicScene() {
 void renderBasicScene() {
 }
 
-int main(int /*argc*/, char** /*argv*/)
+int main(int argc, char** argv)
 {
+
+	std::string terrainFile = "../assets/textures/terrain.pgm";
+    if (argc > 1) {
+        terrainFile = argv[1]; // Si un argument est passé, on l'utilise !
+    }
+
 	/* GLFW initialisation */
 	GLFWwindow* window;
 	if (!glfwInit()) return -1;
@@ -191,7 +197,7 @@ int main(int /*argc*/, char** /*argv*/)
 	onWindowResized(window,WINDOW_WIDTH,WINDOW_HEIGHT);
 	CHECK_GL;
 
-	initBasicScene();
+	initBasicScene(terrainFile);
 
 	double lastTime = glfwGetTime();
 
