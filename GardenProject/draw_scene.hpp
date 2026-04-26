@@ -6,6 +6,7 @@
 #include "tools/basic_mesh.hpp"
 #include "HeightMap.hpp"
 #include "Bird.hpp"
+#include "Windmill.hpp"
 
 using namespace glbasimac;
 
@@ -25,6 +26,7 @@ extern GLBI_Convex_2D_Shape cercle;
 extern StandardMesh* a_frame;
 
 extern Bird myBird;
+extern Windmill myWindmill;
 
 extern bool usePhong;
 

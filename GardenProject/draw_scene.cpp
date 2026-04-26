@@ -22,6 +22,7 @@ float sunPosY = 50.0f;
 float sunPosZ = 60.0f;
 
 Bird myBird(Vector3D(0.0f, 0.0f, 30.0f), deg2rad(0.0f));
+Windmill myWindmill(Vector3D(15.0f, 100.0f, 7.6f));
 
 // Variables globales pour la génération des arbres (positions sur la carte et modèles 3D)
 std::vector<Vector3D> treePositions;
@@ -179,6 +180,7 @@ void initScene() {
     treeLeavesMesh->createVAO();
 
     myBird.init();
+    myWindmill.init();
 }
 
 
@@ -279,7 +281,10 @@ void drawTree() {
 }
 
 void drawStructure() {
-	// TO DO
+	if (usePhong) myEngine.switchToPhongShading();
+    else myEngine.switchToFlatShading();
+
+    myWindmill.draw(myEngine);
 }
 
 void drawScene() {
@@ -288,8 +293,10 @@ void drawScene() {
     drawSun();
     drawTree();
     drawBird();
+    drawStructure();
 }
 
 void updateScene(double deltaTime) {
     myBird.update(deltaTime);
+    myWindmill.update(deltaTime);
 }
