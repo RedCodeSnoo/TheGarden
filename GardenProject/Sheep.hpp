@@ -25,7 +25,9 @@ private:
     float m_targetYaw;
     int m_state; 
     float m_timer;
+    float m_walkAnimTime;
 
     static IndexedMesh* s_bodyMesh;
     static IndexedMesh* s_headMesh;
+    static IndexedMesh* s_legMesh;
 };

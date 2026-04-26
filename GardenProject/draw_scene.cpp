@@ -281,6 +281,6 @@ void updateScene(double deltaTime) {
     for(auto& sheep : myHerd) {
         sheep.update(deltaTime);
         Vector3D pos = sheep.getPosition();
-        sheep.setZ(getTerrainZ(pos.x, pos.y) + 0.7f);
+        sheep.setZ(getTerrainZ(pos.x, pos.y) + 0.1f);
     }
 }
