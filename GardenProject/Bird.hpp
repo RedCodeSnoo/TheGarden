@@ -16,6 +16,8 @@ public:
     void update(double deltaTime);
     void draw(GLBI_Engine& engine);
 
+    Vector3D getPosition() const { return m_position; }
+
 private:
     IndexedMesh* m_bodyMesh;
     IndexedMesh* m_headMesh;

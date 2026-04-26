@@ -21,10 +21,7 @@ float sunPosX = 0.0f;
 float sunPosY = 0.0f;
 float sunPosZ = 50.0f;
 
-Bird myBird1(Vector3D(10.0f, 10.0f, 30.0f), deg2rad(90.0f));
-Bird myBird2(Vector3D(-10.0f, 10.0f, 30.0f), deg2rad(-90.0f));
-Bird myBird3(Vector3D(10.0f, -10.0f, 30.0f), deg2rad(0.0f));
-Bird myBird4(Vector3D(-10.0f, -10.0f, 30.0f), deg2rad(180.0f));
+Bird myBird(Vector3D(0.0f, 0.0f, 30.0f), deg2rad(0.0f));
 
 // Variables globales pour la génération des arbres (positions sur la carte et modèles 3D)
 std::vector<Vector3D> treePositions;
@@ -166,11 +163,8 @@ void initScene() {
     }
 
     myEngine.switchToPhongShading();
-    myEngine.setLightPosition(Vector4D{sunPosX, sunPosY, sunPosZ, 1.0}); 
-	myEngine.setLightIntensity(Vector3D{1.0f, 1.0f, 1.0f}); 
-    
+    myEngine.addALight(Vector4D(0,0,0,1), Vector3D(1,1,1));
     myEngine.setAttenuationFactor(Vector3D{1.0, 0.0, 0.0});  
-    
 	myEngine.switchToFlatShading();
 
     // Tronc
@@ -181,22 +175,24 @@ void initScene() {
     treeLeavesMesh = STP3D::basicSphere(1.2f, 16, 16);
     treeLeavesMesh->createVAO();
 
-    myBird1.init();
-    myBird2.init();
-    myBird3.init();
-    myBird4.init();
+    myBird.init();
 }
 
 
 
 void drawGround() {
     myEngine.switchToPhongShading();
+
+    myEngine.setLightPosition(Vector4D(sunPosX, sunPosY, sunPosZ, 0.0f), 0); 
+    myEngine.setLightIntensity(Vector3D(1.0f, 1.0f, 1.0f), 0);
+
+    Vector3D birdPos = myBird.getPosition(); 
+    myEngine.setLightPosition(Vector4D(birdPos.x, birdPos.y, birdPos.z, 1.0f), 1); 
+    myEngine.setLightIntensity(Vector3D(1.0f, 1.0f, 1.0f), 1); 
     myEngine.setFlatColor(1.0f, 1.0f, 1.0f);
-
     myEngine.activateTexturing(true);
-    groundTexture.attachTexture();
-    glActiveTexture(GL_TEXTURE0);
 
+    groundTexture.attachTexture();
     myEngine.updateMvMatrix();
     ground.draw();
 
@@ -215,10 +211,7 @@ void drawSun() {
 }
 
 void drawBird() {
-	myBird1.draw(myEngine);
-    myBird2.draw(myEngine);
-    myBird3.draw(myEngine);
-    myBird4.draw(myEngine);
+	myBird.draw(myEngine);
 }
 
 void drawTree() {
@@ -290,8 +283,5 @@ void drawScene() {
 }
 
 void updateScene(double deltaTime) {
-    myBird1.update(deltaTime);
-    myBird2.update(deltaTime);
-    myBird3.update(deltaTime);
-    myBird4.update(deltaTime);
+    myBird.update(deltaTime);
 }
