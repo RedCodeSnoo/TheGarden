@@ -28,6 +28,8 @@ std::vector<Vector3D> treePositions;
 IndexedMesh* treeTrunkMesh = nullptr;
 IndexedMesh* treeLeavesMesh = nullptr;
 
+bool usePhong = true;
+
 
 void initScene() {
 
@@ -182,15 +184,19 @@ void initScene() {
 
 
 void drawGround() {
-    myEngine.switchToPhongShading();
+    if (usePhong) {
+        myEngine.switchToPhongShading();
+        myEngine.setLightPosition(Vector4D(sunPosX, sunPosY, sunPosZ, 0.0f), 0); 
+        myEngine.setLightIntensity(Vector3D(1.0f, 1.0f, 1.0f), 0);
 
-    myEngine.setLightPosition(Vector4D(sunPosX, sunPosY, sunPosZ, 0.0f), 0); 
-    myEngine.setLightIntensity(Vector3D(1.0f, 1.0f, 1.0f), 0);
+        Vector3D birdPos = myBird.getPosition(); 
+        myEngine.setLightPosition(Vector4D(birdPos.x, birdPos.y, birdPos.z, 1.0f), 1); 
+        myEngine.setLightIntensity(Vector3D(1.0f, 1.0f, 1.0f), 1); 
+    } else {
+        myEngine.switchToFlatShading();
+    }
 
-    Vector3D birdPos = myBird.getPosition(); 
-    myEngine.setLightPosition(Vector4D(birdPos.x, birdPos.y, birdPos.z, 1.0f), 1); 
-    myEngine.setLightIntensity(Vector3D(1.0f, 1.0f, 1.0f), 1); 
-    myEngine.setFlatColor(0.25f, 0.25f, 0.25f);
+    myEngine.setFlatColor(0.75f, 0.75f, 0.75f);
     myEngine.activateTexturing(true);
 
     groundTexture.attachTexture();
@@ -216,7 +222,8 @@ void drawBird() {
 }
 
 void drawTree() {
-    myEngine.switchToPhongShading();
+    if (usePhong) myEngine.switchToPhongShading();
+    else myEngine.switchToFlatShading();
     
     for (const auto& pos : treePositions) {
         myEngine.mvMatrixStack.pushMatrix(); 

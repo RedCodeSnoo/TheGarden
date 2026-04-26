@@ -26,6 +26,8 @@ extern StandardMesh* a_frame;
 
 extern Bird myBird;
 
+extern bool usePhong;
+
 void initScene();
 
 void drawFrame();

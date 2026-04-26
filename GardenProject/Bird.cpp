@@ -1,6 +1,8 @@
 #include "Bird.hpp"
 #include <cstdlib>
 
+extern bool usePhong;
+
 Bird::Bird(Vector3D startPosition, float startYaw) :
     m_leftWing(true), 
     m_rightWing(false),
@@ -91,7 +93,9 @@ void Bird::update(double deltaTime) {
 void Bird::draw(GLBI_Engine& engine) {
     if (!m_bodyMesh) return;
 
-    engine.switchToPhongShading();
+    if (usePhong) engine.switchToPhongShading();
+    else engine.switchToFlatShading();
+    
     engine.mvMatrixStack.pushMatrix();
     
     engine.mvMatrixStack.addTransformation(Matrix4D::translation(m_position.x, m_position.y, m_position.z));
