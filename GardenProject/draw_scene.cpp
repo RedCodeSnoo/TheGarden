@@ -24,10 +24,7 @@ float sunPosZ = 60.0f;
 Bird myBird(Vector3D(0.0f, 0.0f, 30.0f), deg2rad(0.0f));
 Windmill myWindmill(Vector3D(15.0f, 100.0f, 7.6f));
 
-// Variables globales pour la génération des arbres (positions sur la carte et modèles 3D)
-std::vector<Vector3D> treePositions;
-IndexedMesh* treeTrunkMesh = nullptr;
-IndexedMesh* treeLeavesMesh = nullptr;
+std::vector<Tree> myForest;
 
 bool usePhong = true;
 
@@ -120,7 +117,7 @@ void initScene() {
 
             // On regarde sur la carte d'élévation si cette case contient un arbre
             if (terrainLoader.isTreeLocation(i, j)) {
-                treePositions.push_back(Vector3D(x_coord, y_coord, h0));
+                myForest.push_back(Tree(Vector3D(x_coord, y_coord, h0)));
             }
 
             // --- Triangle 1 ---
@@ -171,14 +168,7 @@ void initScene() {
     myEngine.setAttenuationFactor(Vector3D{1.0, 0.0, 0.0});  
 	myEngine.switchToFlatShading();
 
-    // Tronc
-    treeTrunkMesh = STP3D::basicCylinder(2.0f, 0.25f, 16, 1);
-    treeTrunkMesh->createVAO();
-    
-    // Feuilles
-    treeLeavesMesh = STP3D::basicSphere(1.2f, 16, 16);
-    treeLeavesMesh->createVAO();
-
+    Tree::initMeshes();
     myBird.init();
     myWindmill.init();
 }
@@ -226,57 +216,9 @@ void drawBird() {
 void drawTree() {
     if (usePhong) myEngine.switchToPhongShading();
     else myEngine.switchToFlatShading();
-    
-    for (const auto& pos : treePositions) {
-        myEngine.mvMatrixStack.pushMatrix(); 
-        
-        // On se place à la base de l'arbre sur le terrain
-        myEngine.mvMatrixStack.addTransformation(Matrix4D::translation(pos.x, pos.y, pos.z));
 
-        // Tronc de l'arbre
-        myEngine.mvMatrixStack.pushMatrix();
-        myEngine.mvMatrixStack.addTransformation(Matrix4D::rotation(deg2rad(90.0f), 0));
-        myEngine.setFlatColor(0.35f, 0.20f, 0.05f);
-        myEngine.updateMvMatrix();
-        treeTrunkMesh->draw();
-        myEngine.mvMatrixStack.popMatrix();
-
-        // Le feuillage central de l'arbre
-        myEngine.mvMatrixStack.pushMatrix();
-        myEngine.mvMatrixStack.addTransformation(Matrix4D::translation(0.0f, 0.0f, 2.0f));
-        myEngine.setFlatColor(0.2f, 0.7f, 0.2f);
-        myEngine.updateMvMatrix();
-        treeLeavesMesh->draw();
-        myEngine.mvMatrixStack.popMatrix();
-
-        // Les branches et leurs feuilles
-        int numberOfBranches = 5;
-        for (int i = 0; i < numberOfBranches; i++) {
-            myEngine.mvMatrixStack.pushMatrix();
-
-            // Branches
-            myEngine.mvMatrixStack.addTransformation(Matrix4D::translation(0.0f, 0.0f, 1.0f));
-            float branchAngleZ = i * (360.0f / numberOfBranches);
-            myEngine.mvMatrixStack.addTransformation(Matrix4D::rotation(deg2rad(branchAngleZ), 2));
-            myEngine.mvMatrixStack.addTransformation(Matrix4D::rotation(deg2rad(45.0f), 1));
-
-            myEngine.mvMatrixStack.pushMatrix();
-            myEngine.mvMatrixStack.addTransformation(Matrix4D::rotation(deg2rad(90.0f), 0));
-            myEngine.setFlatColor(0.35f, 0.20f, 0.05f);
-            myEngine.updateMvMatrix();
-            treeTrunkMesh->draw();
-            myEngine.mvMatrixStack.popMatrix();
-
-            // Feuilles
-            myEngine.mvMatrixStack.addTransformation(Matrix4D::translation(0.0f, 0.0f, 2.0f));
-            myEngine.setFlatColor(0.2f, 0.7f, 0.2f);
-            myEngine.updateMvMatrix();
-            treeLeavesMesh->draw();
-
-            myEngine.mvMatrixStack.popMatrix();
-        }
-
-        myEngine.mvMatrixStack.popMatrix();
+    for (const auto& tree : myForest) {
+        tree.draw(myEngine);
     }
 }
 

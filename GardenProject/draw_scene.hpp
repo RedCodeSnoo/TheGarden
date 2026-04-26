@@ -7,6 +7,8 @@
 #include "HeightMap.hpp"
 #include "Bird.hpp"
 #include "Windmill.hpp"
+#include "Tree.hpp"
+#include <vector>
 
 using namespace glbasimac;
 
