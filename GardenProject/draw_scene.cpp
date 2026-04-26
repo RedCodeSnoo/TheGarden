@@ -26,6 +26,8 @@ Windmill myWindmill(Vector3D(15.0f, 100.0f, 7.6f));
 
 std::vector<Tree> myForest;
 
+std::vector<Sheep> myHerd;
+
 bool usePhong = true;
 
 
@@ -171,6 +173,13 @@ void initScene() {
     Tree::initMeshes();
     myBird.init();
     myWindmill.init();
+
+    Sheep::initMeshes();
+    for(int k = 0; k < 20; k++) {
+        float rx = -40.0f + (std::rand() % 80);
+        float ry = -40.0f + (std::rand() % 80);
+        myHerd.push_back(Sheep(Vector3D(rx, ry, 0.0f)));
+    }
 }
 
 
@@ -229,6 +238,15 @@ void drawStructure() {
     myWindmill.draw(myEngine);
 }
 
+void drawHerd() {
+    if (usePhong) myEngine.switchToPhongShading();
+    else myEngine.switchToFlatShading();
+    
+    for (const auto& sheep : myHerd) {
+        sheep.draw(myEngine);
+    }
+}
+
 void drawScene() {
     a_frame->draw();
     drawGround();
@@ -236,9 +254,33 @@ void drawScene() {
     drawTree();
     drawBird();
     drawStructure();
+    drawHerd();
+}
+
+float getTerrainZ(float x, float y) {
+    float scaleXY = 1.0f;
+    float scaleZ = 0.05f;
+    float hmin = terrainLoader.getMinPixel() * scaleZ;
+    float offsetX = (terrainLoader.getWidth() - 1) * scaleXY / 2.0f;
+    float offsetY = (terrainLoader.getHeight() - 1) * scaleXY / 2.0f;
+
+    int i = std::round((x + offsetX) / scaleXY);
+    int j = std::round((y + offsetY) / scaleXY);
+    
+    if (i < 0) i = 0;
+    if (i >= terrainLoader.getWidth()) i = terrainLoader.getWidth() - 1;
+    if (j < 0) j = 0;
+    if (j >= terrainLoader.getHeight()) j = terrainLoader.getHeight() - 1;
+
+    return terrainLoader.getPixel(i, j) * scaleZ - hmin;
 }
 
 void updateScene(double deltaTime) {
     myBird.update(deltaTime);
     myWindmill.update(deltaTime);
+    for(auto& sheep : myHerd) {
+        sheep.update(deltaTime);
+        Vector3D pos = sheep.getPosition();
+        sheep.setZ(getTerrainZ(pos.x, pos.y) + 0.7f);
+    }
 }

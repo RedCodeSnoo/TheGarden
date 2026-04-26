@@ -8,6 +8,7 @@
 #include "Bird.hpp"
 #include "Windmill.hpp"
 #include "Tree.hpp"
+#include "Sheep.hpp"
 #include <vector>
 
 using namespace glbasimac;
@@ -43,6 +44,8 @@ void drawBird();
 void drawTree();
 
 void drawStructure();
+
+void drawHerd();
 
 void drawScene();
 
